@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Collections;
+using System.Configuration;
 
 namespace GFHelper
 {
@@ -35,6 +36,7 @@ namespace GFHelper
 
         public ConfigManager(InstanceManager im)
         {
+            
             fileName = (string)Properties.Settings.Default["ConfigFile"];
             this.im = im;
             this.config = new Dictionary<int, ConfigNode>();

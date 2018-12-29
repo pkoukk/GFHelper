@@ -11,6 +11,24 @@ namespace GFHelper
     class CommonHelper
     {
 
+        private static int _ReqSerial=0;
+
+        public static int ReqSerial
+        {
+            get
+            {
+                _ReqSerial++;
+                return _ReqSerial;
+            }
+        }
+
+        public static long TimeStampInSecond()
+        {
+            DateTime time = new DateTime(1970, 1, 1, 0, 0, 0);
+            TimeSpan span = new TimeSpan(DateTime.UtcNow.Ticks - time.Ticks);
+            return (long)(span.TotalMilliseconds / 1000);
+        }
+
         public static int ConvertDateTimeInt(System.DateTime time, bool ifoffset = false)
         {
             //double intResult = 0;
@@ -54,7 +72,7 @@ namespace GFHelper
 
         public static int CurrentLeveMaxExp(int level, bool isUser = false)
         {
-            
+
             if (!isUser)
             {
                 if (level <= 25)
@@ -76,7 +94,7 @@ namespace GFHelper
                 return (100 * (int)Math.Floor((float)Math.Pow(level * 0.15f, 2.4f)));//26-29
             }
 
-            
+
             if (level <= 25)
             {
                 return (level * 100);

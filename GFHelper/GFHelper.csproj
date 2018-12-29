@@ -62,12 +62,21 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.1.0.145, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.1.1.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="INIFileParser, Version=2.5.2.0, Culture=neutral, PublicKeyToken=79af7b307b65cf3c, processorArchitecture=MSIL">
+      <HintPath>..\packages\ini-parser.2.5.2\lib\net20\INIFileParser.dll</HintPath>
+    </Reference>
     <Reference Include="Ionic.Zip, Version=1.9.7.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
       <HintPath>..\packages\DotNetZip.1.9.7\lib\net20\Ionic.Zip.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Nekoxy">
       <HintPath>..\Nekoxy.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -96,12 +105,14 @@
     </ApplicationDefinition>
     <Compile Include="AuthCode.cs" />
     <Compile Include="AutoOperation.cs" />
+    <Compile Include="catcher.cs" />
     <Compile Include="CommonHelper.cs" />
     <Compile Include="ConfigManager.cs" />
     <Compile Include="Data.cs" />
     <Compile Include="DataHelper.cs" />
     <Compile Include="InstanceManager.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="LoginManager.cs" />
     <Compile Include="Models\AutoOperationInfo.cs" />
     <Compile Include="Models\CommonModels.cs" />
     <Compile Include="Models\EffectGridType.cs" />
@@ -110,9 +121,11 @@
     <Compile Include="Models\GunInfo.cs" />
     <Compile Include="Models\GunType.cs" />
     <Compile Include="Models\GunWithUserInfo.cs" />
+    <Compile Include="Models\LoginResponse.cs" />
     <Compile Include="Models\OperationInfo.cs" />
     <Compile Include="Models\Platform.cs" />
     <Compile Include="Models\ServerInfo.cs" />
+    <Compile Include="Models\SignedData.cs" />
     <Compile Include="SimpleInfo.cs" />
     <Compile Include="Models\TimerDelegate.cs" />
     <Compile Include="Models\UserInfo.cs" />

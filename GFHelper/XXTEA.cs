@@ -3,192 +3,173 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
 
-using boolean = System.Boolean;
-//讲道理，java到C#，鬼知道能不能跑起来
-//↑并不能
 namespace GFHelper
 {
+
     public class XXTEA
     {
-        public static byte[] decrypt(byte[] barr1, byte[] barr2)
+        public XXTEA()
         {
-            if (barr1.Length == 0)
-            {
-                return barr1;
-            }
-            return toByteArray(decrypt(toIntArray(barr1, false), toIntArray(barr2, false)), false);
+
         }
 
-        public static int[] decrypt(int[] iarr1, int[] iarr2)
+        public static byte[] decrypt(byte[] arg3, byte[] arg4)
         {
-            int num2;
-            int num4;
-            int expressionStack_14_1;
-            int expressionStack_19_0;
-            int length = iarr1.Length;
-            int num8 = iarr1[length - 1];
-            int num9 = iarr1[0];
-            if (length != -1)
+            if (arg3.Length != 0)
             {
-                int expressionStack_18_1 = 0x34;
-                int expressionStack_18_0 = length;
-                expressionStack_19_0 = expressionStack_18_1 / expressionStack_18_0;
-                goto Label_0019;
+                arg3 = XXTEA.toByteArray(XXTEA.decrypt(XXTEA.toIntArray(arg3, false), XXTEA.toIntArray(arg4, false)), false);
+            }
+
+            return arg3;
+        }
+
+        public static int[] decrypt(int[] arg13, int[] arg14)
+        {
+            int v2 = arg13.Length;
+            int v0 = -1640531527;
+            int v5 = (52 / v2 + 6) * v0;
+            int v6 = arg13[0];
+            do
+            {
+                int v1 = moveRight(v5,2) & 3;
+                int v3;
+                for (v3 = v2 - 1; v3 > 0; --v3)
+                {
+                    v6 = arg13[v3] - ((moveRight(arg13[v3 - 1], 5) ^ v6 << 2) + (moveRight(v6, 3) ^ arg13[v3 - 1] << 4) ^ (v5 ^ v6) + (arg14[v3 & 3 ^ v1] ^ arg13[v3 - 1]));
+                    arg13[v3] = v6;
+                }
+
+                v6 = arg13[0] - ((moveRight(arg13[v2 - 1], 5) ^ v6 << 2) + (moveRight(v6, 3) ^ arg13[v2 - 1] << 4) ^ (v5 ^ v6) + (arg14[v3 & 3 ^ v1] ^ arg13[v2 - 1]));
+                arg13[0] = v6;
+                v5 -= v0;
+            }
+            while (v5 != 0);
+
+            return arg13;
+        }
+
+        public static byte[] encrypt(byte[] arg3, byte[] arg4)
+        {
+            if (arg3.Length != 0)
+            {
+                arg3 = XXTEA.toByteArray(XXTEA.encrypt(XXTEA.toIntArray(arg3, false), XXTEA.toIntArray(arg4, false)), false);
+            }
+
+            return arg3;
+        }
+
+        public static int[] encrypt(int[] arg13, int[] arg14)
+        {
+            int v2 = arg13.Length;
+            int v4 = 52 / v2 + 6;
+            int v5 = 0;
+            int v7 = arg13[v2 - 1];
+            int v0 = -1640531527;
+            do
+            {
+                v5 += v0;
+                int v1 = moveRight(v5, 2) & 3;
+                int v3;
+                for (v3 = 0; v3 < v2 - 1; ++v3)
+                {
+                    v7 = arg13[v3] + ((moveRight(v7, 5) ^ arg13[v3 + 1] << 2) + (moveRight(arg13[v3 + 1], 3) ^ v7 << 4) ^ (v5 ^ arg13[v3 + 1]) + (arg14[v3 & 3 ^ v1] ^ v7));
+                    arg13[v3] = v7;
+                }
+
+                int v8 = v2 - 1;
+                v7 = arg13[v8] + ((moveRight(v7, 5) ^ arg13[0] << 2) + (moveRight(arg13[0], 3) ^ v7 << 4) ^ (v5 ^ arg13[0]) + (arg14[v3 & 3 ^ v1] ^ v7));
+                arg13[v8] = v7;
+                --v4;
+            }
+            while (v4 > 0);
+
+            return arg13;
+        }
+
+        private static byte[] toByteArray(int[] arg6, bool arg7)
+        {
+            byte[] v3;
+            int v2 = arg6.Length << 2;
+
+            if (arg7)
+            {
+                int v1 = arg6[arg6.Length - 1];
+                if (v1 > v2)
+                {
+                    v3 = null;
+                    return v3;
+                }
+                else
+                {
+                    v2 = v1;
+                }
+            }
+
+            v3 = new byte[v2];
+            int v0;
+            for (v0 = 0; v0 < v2; ++v0)
+            {
+                v3[v0] = ((byte)(moveRight(arg6[moveRight(v0, 2)], ((v0 & 3)) << 3) & 255));
+            }
+
+            return v3;
+        }
+
+        private static int[] toIntArray(byte[] arg7, bool arg8)
+        {
+            int[] v2;
+            int v1 = (arg7.Length & 3) == 0 ? moveRight(arg7.Length, 2) : moveRight(arg7.Length, 2) + 1;
+            if (arg8)
+            {
+                v2 = new int[v1 + 1];
+                v2[v1] = arg7.Length;
             }
             else
             {
-                expressionStack_14_1 = 0x34;
-                int expressionStack_14_0 = length;
+                v2 = new int[v1];
             }
-            expressionStack_19_0 = -expressionStack_14_1;
-            Label_0019:
-            num2 = (expressionStack_19_0 + 6) * -1640531527;
-            int index = iarr1[0];
-            Label_0026:
-            num4 = (num2 >> 2) & 3;
-            int num5 = length - 1;
-            int num6 = index;
-            index = num5;
-            while (true)
+
+            v1 = arg7.Length;
+            int v0;
+            for (v0 = 0; v0 < v1; ++v0)
             {
-                if (index <= 0)
-                {
-                    num5 = iarr1[length - 1];
-                    index = iarr1[0] - ((((num5 >> 5) ^ (num6 << 2)) + ((num6 >> 3) ^ (num5 << 4))) ^ ((num2 ^ num6) + (iarr2[(index & 3) ^ num4] ^ num5)));
-                    iarr1[0] = index;
-                    num6 = num2 + 0x61c88647;
-                    num2 = num6;
-                    if (num6 == 0)
-                    {
-                        return iarr1;
-                    }
-                    goto Label_0026;
-                }
-                num5 = iarr1[index - 1];
-                iarr1[index] -= (((num5 >> 5) ^ (num6 << 2)) + ((num6 >> 3) ^ (num5 << 4))) ^ ((num2 ^ num6) + (iarr2[(index & 3) ^ num4] ^ num5));
-                index--;
+                int v3 = moveRight(v0, 2);
+                v2[v3] |= (arg7[v0] & 255) << ((v0 & 3) << 3);
             }
+
+            return v2;
         }
 
-        public static byte[] encrypt(byte[] barr1, byte[] barr2)
+        private static int moveRight(int input, int pos)
         {
-            if (barr1.Length == 0)
-            {
-                return barr1;
-            }
-            return toByteArray(encrypt(toIntArray(barr1, false), toIntArray(barr2, false)), false);
+            return (int)((uint)input >> pos);
         }
 
-        public static int[] encrypt(int[] iarr1, int[] iarr2)
+        public static String stringToMD5(String arg8)
         {
-            int num2;
-            int num5;
-            int expressionStack_A_1;
-            int expressionStack_F_0;
-            int length = iarr1.Length;
-            if (length != -1)
+            byte[] v2;
+            String v4 = null;
+            v2 = new MD5CryptoServiceProvider().ComputeHash(Encoding.UTF8.GetBytes(arg8));
+            StringBuilder v3 = new StringBuilder(v2.Length * 2);
+            int v5 = v2.Length;
+            int v4_1;
+            for (v4_1 = 0; v4_1 < v5; ++v4_1)
             {
-                int expressionStack_E_1 = 0x34;
-                int expressionStack_E_0 = length;
-                expressionStack_F_0 = expressionStack_E_1 / expressionStack_E_0;
-                goto Label_000F;
-            }
-            else
-            {
-                expressionStack_A_1 = 0x34;
-                int expressionStack_A_0 = length;
-            }
-            expressionStack_F_0 = -expressionStack_A_1;
-            Label_000F:
-            num2 = expressionStack_F_0 + 6;
-            int num3 = 0;
-            int index = iarr1[length - 1];
-            Label_001A:
-            num5 = num3 - 0x61c88647;
-            int num6 = (num5 >> 2) & 3;
-            int num7 = 0;
-            num3 = index;
-            index = num7;
-            while (true)
-            {
-                if (index >= (length - 1))
+                int v0 = v2[v4_1];
+                if ((v0 & 255) < 16)
                 {
-                    int num8 = iarr1[0];
-                    num7 = length - 1;
-                    index = iarr1[num7] + ((((num3 >> 5) ^ (num8 << 2)) + ((num8 >> 3) ^ (num3 << 4))) ^ ((num5 ^ num8) + (iarr2[(index & 3) ^ num6] ^ num3)));
-                    iarr1[num7] = index;
-                    num7 = num2 - 1;
-                    num2 = num7;
-                    num3 = num5;
-                    if (num7 <= 0)
-                    {
-                        return iarr1;
-                    }
-                    goto Label_001A;
+                    v3.Append("0");
                 }
-                num7 = iarr1[index + 1];
-                iarr1[index] += (((num3 >> 5) ^ (num7 << 2)) + ((num7 >> 3) ^ (num3 << 4))) ^ ((num5 ^ num7) + (iarr2[(index & 3) ^ num6] ^ num3));
-                index++;
+
+                v3.Append((v0 & 255).ToString("x"));
             }
+
+            return v3.ToString();
         }
 
-        private static byte[] toByteArray(int[] numArray1, bool flag1)
-        {
-            int num = flag1 ? 1 : 0;
-            int index = numArray1.Length << 2;
-            int num3 = index;
-            if (num != 0)
-            {
-                num3 = numArray1[numArray1.Length - 1];
-                if (num3 > index)
-                {
-                    return null;
-                }
-            }
-            byte[] buffer2 = new byte[num3];
-            index = 0;
-            while (true)
-            {
-                byte[] buffer = buffer2;
-                if (index >= num3)
-                {
-                    return buffer;
-                }
-                buffer2[index] = (byte)((sbyte)((numArray1[index >> 2] >> ((index & 3) << 3)) & 0xff));
-                index++;
-            }
-        }
-
-        private static int[] toIntArray(byte[] buffer1, bool flag1)
-        {
-            int num2;
-            int[] numArray;
-            int num = flag1 ? 1 : 0;
-            if ((buffer1.Length & 3) != 0)
-            {
-                num2 = (buffer1.Length >> 2) + 1;
-            }
-            else
-            {
-                num2 = buffer1.Length >> 2;
-            }
-            if (num == 0)
-            {
-                numArray = new int[num2];
-            }
-            else
-            {
-                numArray = new int[num2 + 1];
-                numArray[num2] = buffer1.Length;
-            }
-            int length = buffer1.Length;
-            for (num2 = 0; num2 < length; num2++)
-            {
-                int index = num2 >> 2;
-                numArray[index] |= buffer1[num2] << ((num2 & 3) << 3);
-            }
-            return numArray;
-        }
     }
+
+
 }
